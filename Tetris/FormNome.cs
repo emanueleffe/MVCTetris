@@ -24,11 +24,20 @@ namespace Tetris.Model
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        // Gestione dell'evento Click sul pulsante "Ok"
+        private void bOk_Click(object sender, EventArgs e)
         {
             Convalida();
         }
 
+        // Gestione dell'evento Keydown in caso si prema Invio quando si ha il focus nella TextBox
+        private void tNome_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+                Convalida();
+        }
+
+        // Metodo utilizzato per convalidare l'input. Se è valido salva il nome e chiude il form.
         private void Convalida()
         {
             if ((tNome.Text.Length < 13) && (tNome.Text.Length > 0))
@@ -37,17 +46,7 @@ namespace Tetris.Model
                 this.Close();
             }
             else
-                MessageBox.Show("Nome troppo lungo o non valido\nLunghezza massima: 12 caratteri");
-        }
-
-        private void tNome_KeyDown(object sender, KeyEventArgs e)
-        {
-            switch(e.KeyData)
-            {
-                case Keys.Enter:
-                    Convalida();
-                    break;
-            }
+                MessageBox.Show("Nome inserito troppo lungo o non valido.");
         }
     }
 }

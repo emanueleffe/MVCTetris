@@ -90,11 +90,11 @@
             // 
             this.bPausaRiprendi.AutoSize = true;
             this.bPausaRiprendi.ForeColor = System.Drawing.Color.White;
-            this.bPausaRiprendi.Location = new System.Drawing.Point(262, 369);
+            this.bPausaRiprendi.Location = new System.Drawing.Point(262, 370);
             this.bPausaRiprendi.Name = "bPausaRiprendi";
-            this.bPausaRiprendi.Size = new System.Drawing.Size(81, 13);
+            this.bPausaRiprendi.Size = new System.Drawing.Size(85, 13);
             this.bPausaRiprendi.TabIndex = 8;
-            this.bPausaRiprendi.Text = "Pausa/Riprendi";
+            this.bPausaRiprendi.Text = "Pausa - Riprendi";
             // 
             // Tetris_Form
             // 

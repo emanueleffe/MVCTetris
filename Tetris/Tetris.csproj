@@ -69,11 +69,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classifica.cs" />
-    <Compile Include="Form_Classifica.cs">
+    <Compile Include="FormClassifica.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form_Classifica.Designer.cs">
-      <DependentUpon>Form_Classifica.cs</DependentUpon>
+    <Compile Include="FormClassifica.Designer.cs">
+      <DependentUpon>FormClassifica.cs</DependentUpon>
     </Compile>
     <Compile Include="GrigliaTetris.cs" />
     <Compile Include="Partita.cs" />
@@ -86,23 +86,23 @@
     <Compile Include="PezzoT.cs" />
     <Compile Include="PezzoZ.cs" />
     <Compile Include="ProviderPezzi.cs" />
-    <Compile Include="Punteggio_Nome.cs">
+    <Compile Include="FormNome.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Punteggio_Nome.Designer.cs">
-      <DependentUpon>Punteggio_Nome.cs</DependentUpon>
+    <Compile Include="FormNome.Designer.cs">
+      <DependentUpon>FormNome.cs</DependentUpon>
     </Compile>
     <Compile Include="TetrisController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tetris_Form.cs">
+    <Compile Include="FormTetris.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Tetris_Form.Designer.cs">
-      <DependentUpon>Tetris_Form.cs</DependentUpon>
+    <Compile Include="FormTetris.Designer.cs">
+      <DependentUpon>FormTetris.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Form_Classifica.resx">
-      <DependentUpon>Form_Classifica.cs</DependentUpon>
+    <EmbeddedResource Include="FormClassifica.resx">
+      <DependentUpon>FormClassifica.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -114,11 +114,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Punteggio_Nome.resx">
-      <DependentUpon>Punteggio_Nome.cs</DependentUpon>
+    <EmbeddedResource Include="FormNome.resx">
+      <DependentUpon>FormNome.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tetris_Form.resx">
-      <DependentUpon>Tetris_Form.cs</DependentUpon>
+    <EmbeddedResource Include="FormTetris.resx">
+      <DependentUpon>FormTetris.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

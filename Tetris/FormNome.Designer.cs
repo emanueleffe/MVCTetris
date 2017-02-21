@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.bOk = new System.Windows.Forms.Button();
             this.tNome = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
@@ -43,15 +43,15 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Inserisci il tuo nome:";
             // 
-            // button1
+            // bOk
             // 
-            this.button1.Location = new System.Drawing.Point(120, 44);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Ok";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.bOk.Location = new System.Drawing.Point(120, 44);
+            this.bOk.Name = "bOk";
+            this.bOk.Size = new System.Drawing.Size(75, 23);
+            this.bOk.TabIndex = 2;
+            this.bOk.Text = "Ok";
+            this.bOk.UseVisualStyleBackColor = true;
+            this.bOk.Click += new System.EventHandler(this.bOk_Click);
             // 
             // tNome
             // 
@@ -70,7 +70,7 @@
             this.BackColor = System.Drawing.Color.DarkSlateGray;
             this.ClientSize = new System.Drawing.Size(300, 81);
             this.Controls.Add(this.tNome);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.bOk);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
@@ -86,7 +86,7 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button bOk;
         private System.Windows.Forms.TextBox tNome;
     }
 }

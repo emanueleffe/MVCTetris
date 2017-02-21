@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -46,18 +47,68 @@ namespace Tetris.Model
             Punteggio = 0;
             Difficolta = 1;
             EstraiPezzi();
+            if (!File.Exists("classifica.xml"))
+                CreaFileClassifica();
             CaricaPunteggi();
+        }
+
+        public void CreaFileClassifica()
+        {
+            XmlSerializer writer = new XmlSerializer(punteggi.GetType(), "Tetris.Model");
+            FileStream file = File.Create("classifica.xml");
+
+            writer.Serialize(file, punteggi);
+            file.Close();
         }
 
         private void CaricaPunteggi()
         {
-            var serializer = new XmlSerializer(punteggi.GetType(), "Tetris.Model");
-            object obj;
-            using (var reader = new StreamReader("classifica.xml"))
+            try
             {
-                obj = serializer.Deserialize(reader.BaseStream);
+                XmlSerializer serializer = new XmlSerializer(punteggi.GetType(), "Tetris.Model");
+                object obj;
+                using (StreamReader reader = new StreamReader("classifica.xml"))
+                {
+                    obj = serializer.Deserialize(reader.BaseStream);
+                    reader.Close();
+                }
+                punteggi = (List<Classifica>)obj;
             }
-            punteggi = (List<Classifica>)obj;
+            catch(InvalidOperationException)
+            {
+                CreaFileClassifica();
+                CaricaPunteggi();
+            }            
+        }
+
+        public void SalvaPunteggio(string nome, int punti)
+        {
+            var punteggio = new Classifica()
+            {
+                Punteggio = punti,
+                Nome = nome
+            };
+
+            punteggi.Add(punteggio);
+
+            try
+            {
+                XmlSerializer writer = new XmlSerializer(punteggi.GetType(), "Tetris.Model");
+
+                FileStream file = File.Create("classifica.xml");
+
+                writer.Serialize(file, punteggi);
+                file.Close();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                System.Windows.Forms.MessageBox.Show("Impossibile scrivere sul file 'Classifica.xml'.\nProbabilmente è in sola lettura\n");
+            }
+            catch(IOException)
+            {
+                System.Windows.Forms.MessageBox.Show("Impossibile salvare il file 'Classifica.xml'.\nProbabilmente il disco è pieno.");
+            }
+            
         }
 
         // Metodo per ottenere il pezzo estratto
@@ -75,23 +126,6 @@ namespace Tetris.Model
             get
             {
                 return pezzoSuccessivo;
-            }
-        }
-
-        public void AggiungiPunteggio(string nome, int punti)
-        {
-            var punteggio = new Classifica()
-            {
-                Punteggio = punti,
-                Nome = nome
-            };
-
-            punteggi.Add(punteggio);
-
-            var serializer = new XmlSerializer(punteggi.GetType(), "Tetris.Model");
-            using (var writer = new StreamWriter("classifica.xml", false))
-            {
-                serializer.Serialize(writer.BaseStream, punteggi);
             }
         }
 

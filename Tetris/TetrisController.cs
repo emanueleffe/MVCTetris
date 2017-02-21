@@ -97,7 +97,7 @@ namespace Tetris.Controller
         private void Tetris_Form_MostraClassifica(object sender, System.EventArgs e)
         {
             PausaGioco();
-            classificaForm = new Form_Classifica();
+            classificaForm = new Form_Classifica(partita.punteggi);
             classificaForm.ShowDialog();
             RiprendiGioco();
         }
@@ -272,13 +272,7 @@ namespace Tetris.Controller
         private void InserisciRecord()
         {
             this.puntForm.ShowDialog();
-            partita.AggiungiPunteggio(puntForm.Nome, partita.Punteggio);
-        }
-
-        // Metodo per poter visualizzare il form dela classifica
-        private void MostraClassifica()
-        {
-
+            partita.SalvaPunteggio(puntForm.Nome, partita.Punteggio);
         }
     }
 }
