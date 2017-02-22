@@ -1,6 +1,6 @@
 ﻿namespace Tetris.View
 {
-    partial class Tetris_Form
+    partial class FormTetris
     {
         /// <summary>
         /// Required designer variable.
@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormTetris));
             this.punti = new System.Windows.Forms.Label();
             this.diff = new System.Windows.Forms.Label();
             this.pulsanti = new System.Windows.Forms.Label();
@@ -96,7 +97,7 @@
             this.bPausaRiprendi.TabIndex = 8;
             this.bPausaRiprendi.Text = "Pausa - Riprendi";
             // 
-            // Tetris_Form
+            // FormTetris
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -107,8 +108,10 @@
             this.Controls.Add(this.pulsanti);
             this.Controls.Add(this.diff);
             this.Controls.Add(this.punti);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "Tetris_Form";
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.Name = "FormTetris";
             this.Text = "Tetris";
             this.ResumeLayout(false);
             this.PerformLayout();

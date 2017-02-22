@@ -3,11 +3,11 @@ using System.Windows.Forms;
 
 namespace Tetris.Model
 {
-    public partial class Punteggio_Nome : Form
+    public partial class FormNome : Form
     {
         private static string nome = null;
 
-        public Punteggio_Nome()
+        public FormNome()
         {
             InitializeComponent();
         }

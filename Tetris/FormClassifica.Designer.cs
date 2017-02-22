@@ -1,6 +1,6 @@
 ﻿namespace Tetris.View
 {
-    partial class Form_Classifica
+    partial class FormClassifica
     {
         /// <summary>
         /// Required designer variable.
@@ -29,21 +29,22 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.grigliaDati = new System.Windows.Forms.DataGridView();
+            this.bSvuota = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.grigliaDati)).BeginInit();
             this.SuspendLayout();
             // 
-            // dataGridView1
+            // grigliaDati
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.AllowUserToResizeColumns = false;
-            this.dataGridView1.AllowUserToResizeRows = false;
-            this.dataGridView1.BackgroundColor = System.Drawing.Color.DarkSlateGray;
-            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dataGridView1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.grigliaDati.AllowUserToAddRows = false;
+            this.grigliaDati.AllowUserToDeleteRows = false;
+            this.grigliaDati.AllowUserToResizeColumns = false;
+            this.grigliaDati.AllowUserToResizeRows = false;
+            this.grigliaDati.BackgroundColor = System.Drawing.Color.DarkSlateGray;
+            this.grigliaDati.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.grigliaDati.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.grigliaDati.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grigliaDati.Cursor = System.Windows.Forms.Cursors.Default;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.DarkSlateGray;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -51,37 +52,46 @@
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.DarkSlateGray;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.EnableHeadersVisualStyles = false;
-            this.dataGridView1.GridColor = System.Drawing.Color.LightGray;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dataGridView1.Size = new System.Drawing.Size(201, 299);
-            this.dataGridView1.TabIndex = 0;
+            this.grigliaDati.DefaultCellStyle = dataGridViewCellStyle1;
+            this.grigliaDati.EnableHeadersVisualStyles = false;
+            this.grigliaDati.GridColor = System.Drawing.Color.LightGray;
+            this.grigliaDati.Location = new System.Drawing.Point(0, 0);
+            this.grigliaDati.Name = "grigliaDati";
+            this.grigliaDati.ReadOnly = true;
+            this.grigliaDati.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.grigliaDati.RowHeadersVisible = false;
+            this.grigliaDati.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.grigliaDati.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.grigliaDati.Size = new System.Drawing.Size(201, 303);
+            this.grigliaDati.TabIndex = 0;
             // 
-            // Form_Classifica
+            // bSvuota
+            // 
+            this.bSvuota.Location = new System.Drawing.Point(12, 309);
+            this.bSvuota.Name = "bSvuota";
+            this.bSvuota.Size = new System.Drawing.Size(177, 23);
+            this.bSvuota.TabIndex = 1;
+            this.bSvuota.Text = "Elimina punteggi migliori";
+            this.bSvuota.UseVisualStyleBackColor = true;
+            // 
+            // FormClassifica
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkSlateGray;
-            this.ClientSize = new System.Drawing.Size(201, 299);
-            this.Controls.Add(this.dataGridView1);
+            this.ClientSize = new System.Drawing.Size(201, 344);
+            this.Controls.Add(this.bSvuota);
+            this.Controls.Add(this.grigliaDati);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "Form_Classifica";
+            this.Name = "FormClassifica";
             this.Text = "Migliori punteggi";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grigliaDati)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.DataGridView dataGridView1;
+        public System.Windows.Forms.Button bSvuota;
+        public System.Windows.Forms.DataGridView grigliaDati;
     }
 }

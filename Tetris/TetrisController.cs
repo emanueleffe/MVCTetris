@@ -10,9 +10,9 @@ namespace Tetris.Controller
     {
         // Riferimenti agli oggetti
         private Partita partita;
-        private Tetris_Form tView;
-        private Punteggio_Nome puntForm;
-        private Form_Classifica classificaForm;
+        private FormTetris tView;
+        private FormNome puntForm;
+        private FormClassifica classificaForm;
         // Variabili di disegno
         private Graphics g;
         private SolidBrush brush = new SolidBrush(Color.DarkSlateGray);
@@ -34,13 +34,16 @@ namespace Tetris.Controller
 
         public TetrisController()
         {
-            this.tView = new Tetris_Form();
+            this.tView = new FormTetris();
             this.tView.KeyDown += new KeyEventHandler(Tetris_Form_KeyDown);
             this.tView.Paint += new PaintEventHandler(Tetris_Form_Disegna);
             this.tView.t.Tick += new System.EventHandler(Tetris_Form_Tick);
             this.tView.bMostraClassifica.Click += new System.EventHandler(Tetris_Form_MostraClassifica);
             this.tView.bPausaRiprendi.Click += new System.EventHandler(Tetris_Form_PausaRiprendi);
-            this.puntForm = new Punteggio_Nome();
+            this.tView.Resize += new System.EventHandler(Tetris_Form_PausaRiprendiMinimize);
+            this.tView.LostFocus += new System.EventHandler(Tetris_Form_PausaRiprendiFocus);
+            this.tView.GotFocus += new System.EventHandler(Tetris_Form_PausaRiprendiFocus);
+            this.puntForm = new FormNome();
         }
 
         public void IniziaPartita()
@@ -94,12 +97,37 @@ namespace Tetris.Controller
             SpostaInBasso();
         }
 
+        private void Tetris_Form_PausaRiprendiFocus(object sender, System.EventArgs e)
+        {
+            if (tView.Focused == true)
+                RiprendiGioco();
+            if (tView.Focused == false)
+                PausaGioco();
+        }
+
+        private void Tetris_Form_PausaRiprendiMinimize(object sender, System.EventArgs e)
+        {
+            if (tView.WindowState == FormWindowState.Minimized)
+                PausaGioco();
+            else if (tView.WindowState == FormWindowState.Normal)
+                RiprendiGioco();
+        }
+
         private void Tetris_Form_MostraClassifica(object sender, System.EventArgs e)
         {
             PausaGioco();
-            classificaForm = new Form_Classifica(partita.punteggi);
+            classificaForm = new FormClassifica(partita.punteggi);
+            classificaForm.bSvuota.Click += new System.EventHandler(FormClassifica_Svuota_Click);
             classificaForm.ShowDialog();
             RiprendiGioco();
+        }
+
+        private void FormClassifica_Svuota_Click(object sender, System.EventArgs e)
+        {
+            classificaForm.grigliaDati.DataSource = null;
+            partita.punteggi.Clear();
+            partita.CreaFileClassifica();
+            classificaForm.grigliaDati.DataSource = partita.punteggi;
         }
 
         // Metodo per mettere in pausa il gioco

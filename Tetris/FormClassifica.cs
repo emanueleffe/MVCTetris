@@ -3,12 +3,14 @@ using System.Windows.Forms;
 
 namespace Tetris.View
 {
-    public partial class Form_Classifica : Form
+    public partial class FormClassifica : Form
     {
-        public Form_Classifica(List<Model.Classifica> punteggi)
+        private delegate void ButtonEventHandler(object sender, System.EventArgs e);
+
+        public FormClassifica(List<Model.Classifica> punteggi)
         {
             InitializeComponent();
-            dataGridView1.DataSource = punteggi;
+            grigliaDati.DataSource = punteggi;
         }
     }
 }

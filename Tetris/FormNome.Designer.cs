@@ -1,6 +1,6 @@
 ﻿namespace Tetris.Model
 {
-    partial class Punteggio_Nome
+    partial class FormNome
     {
         /// <summary>
         /// Required designer variable.
