@@ -50,16 +50,12 @@ namespace Tetris.Model
 
         public override int xRotazioneSuccessiva()
         {
-            int xSuccessiva = this.x;
-            
-            return xSuccessiva;
+            return this.x;
         }
 
         public override int yRotazioneSuccessiva()
         {
-            int ySuccessiva = this.y;
-            
-            return ySuccessiva;
+            return this.y;
         }
 
 
