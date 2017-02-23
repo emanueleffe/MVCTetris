@@ -7,11 +7,7 @@ namespace Tetris.View
     {
         private delegate void KeyEventHandler(object sender, KeyEventArgs e);
         private delegate void PaintEventHandler(object sender, PaintEventArgs e);
-        private delegate void TickEventHandler(object sender, System.EventArgs e);
-        private delegate void ButtonEventHandler(object sender, System.EventArgs e);
-        private delegate void MinimizeEventHandler(object sender, System.EventArgs e);
-        private delegate void LostFocusEventHandler(object sender, System.EventArgs e);
-        private delegate void GotFocusEventHandler(object sender, System.EventArgs e);
+        private delegate void EventHandler(object sender, System.EventArgs e);
 
         public Timer t;
 

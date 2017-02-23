@@ -31,6 +31,7 @@ namespace Tetris.Controller
         private SoundPlayer piano = new SoundPlayer(Properties.Resources.Piano);
         // Variabili funzionali
         private bool pezzoFissato = false;
+        private bool inPausa = false;
         private int difficolta;
         // Costanti
         private const int dimensioneBlocco = 25;
@@ -44,7 +45,8 @@ namespace Tetris.Controller
             this.tView.bMostraClassifica.Click += new System.EventHandler(Tetris_Form_MostraClassifica);
             this.tView.bPausaRiprendi.Click += new System.EventHandler(Tetris_Form_PausaRiprendi);
             this.tView.Resize += new System.EventHandler(Tetris_Form_PausaRiprendiMinimize);
-            this.puntForm = new FormNome();
+            this.tView.GotFocus += new System.EventHandler(Tetris_Form_PausaRiprendiGotLostFocus);
+            this.tView.LostFocus += new System.EventHandler(Tetris_Form_PausaRiprendiGotLostFocus);
         }
 
         public void IniziaPartita()
@@ -58,39 +60,47 @@ namespace Tetris.Controller
 
         private void Tetris_Form_KeyDown(object sender, KeyEventArgs e)
         {
-            // Gestione dell'evento KeyDown
-            switch (e.KeyData)
-            {
-                // Per ogni pulsante eseguo il movimento ed aggiorno
-                // la posizione del pezzo dov'è situato
-                // e quella successiva
-                case Keys.Up:
-                    partita.RuotaPezzo();
-                    tView.Invalidate(new Rectangle(partita.PezzoAttuale.X * dimensioneBlocco,
-                                                   partita.PezzoAttuale.Y * dimensioneBlocco,
-                                                   partita.PezzoAttuale.Sprite.Width,
-                                                   partita.PezzoAttuale.Sprite.Height));
-                    tView.Invalidate(contenitorePezzo);
-                    tView.Update();
-                    break;
-                case Keys.Down:
-                    SpostaInBasso();
-                    break;
-                case Keys.Left:
-                    partita.SpostaASinistra();
-                    tView.Invalidate(contenitorePezzo);
-                    contenitorePezzo.X -= dimensioneBlocco;
-                    tView.Invalidate(contenitorePezzo);
-                    tView.Update();
-                    break;
-                case Keys.Right:
-                    partita.SpostaADestra();
-                    tView.Invalidate(contenitorePezzo);
-                    contenitorePezzo.X += dimensioneBlocco;
-                    tView.Invalidate(contenitorePezzo);
-                    tView.Update();
-                    break;
-            }
+            if(!inPausa)
+                switch (e.KeyData)
+                {
+                    // Per ogni pulsante eseguo il movimento ed aggiorno
+                    // la posizione del pezzo dov'è situato
+                    // e quella successiva
+                    case Keys.Up:
+                        partita.RuotaPezzo();
+                        tView.Invalidate(new Rectangle(partita.PezzoAttuale.X * dimensioneBlocco,
+                                                       partita.PezzoAttuale.Y * dimensioneBlocco,
+                                                       partita.PezzoAttuale.Sprite.Width,
+                                                       partita.PezzoAttuale.Sprite.Height));
+                        tView.Invalidate(contenitorePezzo);
+                        tView.Update();
+                        break;
+                    case Keys.Down:
+                        SpostaInBasso();
+                        break;
+                    case Keys.Left:
+                        partita.SpostaASinistra();
+                        tView.Invalidate(contenitorePezzo);
+                        contenitorePezzo.X -= dimensioneBlocco;
+                        tView.Invalidate(contenitorePezzo);
+                        tView.Update();
+                        break;
+                    case Keys.Right:
+                        partita.SpostaADestra();
+                        tView.Invalidate(contenitorePezzo);
+                        contenitorePezzo.X += dimensioneBlocco;
+                        tView.Invalidate(contenitorePezzo);
+                        tView.Update();
+                        break;
+                }
+        }
+
+        private void Tetris_Form_PausaRiprendiGotLostFocus(object sender, System.EventArgs e)
+        {
+            if (tView.Focused == true)
+                RiprendiGioco();
+            else if (tView.Focused == false)
+                PausaGioco();
         }
 
         // Gestione dell'evento Tick: il pezzo viene spostato in basso
@@ -127,14 +137,14 @@ namespace Tetris.Controller
         // Metodo per mettere in pausa il gioco
         private void PausaGioco()
         {
+            inPausa = true;
             tView.t.Enabled = false;
-            this.tView.KeyDown -= new KeyEventHandler(Tetris_Form_KeyDown);
         }
 
         // Metodo per riprendere il gioco dalla pausa
         private void RiprendiGioco()
         {
-            this.tView.KeyDown += new KeyEventHandler(Tetris_Form_KeyDown);
+            inPausa = false;
             tView.t.Enabled = true;
         }
 
@@ -293,6 +303,7 @@ namespace Tetris.Controller
         // e per l'aggiunta dello stesso al file classifica.xml
         private void InserisciRecord()
         {
+            puntForm = new FormNome();
             this.puntForm.ShowDialog();
             partita.SalvaPunteggio(puntForm.Nome, partita.Punteggio);
         }
