@@ -3,6 +3,7 @@ using System.Windows.Forms;
 
 using Tetris.View;
 using Tetris.Model;
+using System.Media;
 
 namespace Tetris.Controller
 {
@@ -19,13 +20,15 @@ namespace Tetris.Controller
         private Rectangle sidebar = new Rectangle(250, 0, 125, 400);
         private Rectangle contenitorePezzo;
         // Immagini 25x25px per visualizzare i pezzi già fissati
-        private Image immI_25 = Tetris.Properties.Resources.immI_25;
-        private Image immJ_25 = Tetris.Properties.Resources.immJ_25;
-        private Image immL_25 = Tetris.Properties.Resources.immL_25;
-        private Image immO_25 = Tetris.Properties.Resources.immO_25;
-        private Image immS_25 = Tetris.Properties.Resources.immS_25;
-        private Image immT_25 = Tetris.Properties.Resources.immT_25;
-        private Image immZ_25 = Tetris.Properties.Resources.immZ_25;
+        private Image immI_25 = Properties.Resources.immI_25;
+        private Image immJ_25 = Properties.Resources.immJ_25;
+        private Image immL_25 = Properties.Resources.immL_25;
+        private Image immO_25 = Properties.Resources.immO_25;
+        private Image immS_25 = Properties.Resources.immS_25;
+        private Image immT_25 = Properties.Resources.immT_25;
+        private Image immZ_25 = Properties.Resources.immZ_25;
+        // Musica di background
+        private SoundPlayer piano = new SoundPlayer(Properties.Resources.Piano);
         // Variabili funzionali
         private bool pezzoFissato = false;
         private int difficolta;
@@ -41,8 +44,6 @@ namespace Tetris.Controller
             this.tView.bMostraClassifica.Click += new System.EventHandler(Tetris_Form_MostraClassifica);
             this.tView.bPausaRiprendi.Click += new System.EventHandler(Tetris_Form_PausaRiprendi);
             this.tView.Resize += new System.EventHandler(Tetris_Form_PausaRiprendiMinimize);
-            this.tView.LostFocus += new System.EventHandler(Tetris_Form_PausaRiprendiFocus);
-            this.tView.GotFocus += new System.EventHandler(Tetris_Form_PausaRiprendiFocus);
             this.puntForm = new FormNome();
         }
 
@@ -50,6 +51,7 @@ namespace Tetris.Controller
         {
             // Inizializzazione oggetto Partita e avvio del form
             this.partita = new Partita();
+            piano.PlayLooping();
             this.tView.ShowDialog();
             this.difficolta = this.partita.Difficolta;
         }
@@ -95,14 +97,6 @@ namespace Tetris.Controller
         private void Tetris_Form_Tick(object sender, System.EventArgs e)
         {
             SpostaInBasso();
-        }
-
-        private void Tetris_Form_PausaRiprendiFocus(object sender, System.EventArgs e)
-        {
-            if (tView.Focused == true)
-                RiprendiGioco();
-            if (tView.Focused == false)
-                PausaGioco();
         }
 
         private void Tetris_Form_PausaRiprendiMinimize(object sender, System.EventArgs e)

@@ -11,6 +11,7 @@ namespace Tetris.View
         private delegate void ButtonEventHandler(object sender, System.EventArgs e);
         private delegate void MinimizeEventHandler(object sender, System.EventArgs e);
         private delegate void LostFocusEventHandler(object sender, System.EventArgs e);
+        private delegate void GotFocusEventHandler(object sender, System.EventArgs e);
 
         public Timer t;
 

@@ -199,5 +199,14 @@ namespace Tetris.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.IO.UnmanagedMemoryStream simile a System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream Piano {
+            get {
+                return ResourceManager.GetStream("Piano", resourceCulture);
+            }
+        }
     }
 }
