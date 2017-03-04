@@ -1,2 +1,2 @@
 # MVCTetris
- Just a Tetris clone made using the MVC pattern in C#. 
+ Just a Tetris clone made using the MVC pattern in C# and WinForms.
