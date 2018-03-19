@@ -12,8 +12,8 @@ namespace Tetris
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            TetrisController controllerPartita = new TetrisController();
-            controllerPartita.IniziaPartita();
+            TetrisController gameController = new TetrisController();
+            gameController.StartGame();
         }
     }
 }

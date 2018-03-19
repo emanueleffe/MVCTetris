@@ -1,25 +1,23 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-
 using Tetris.View;
 using Tetris.Model;
-using System.Media;
 
 namespace Tetris.Controller
 {
     class TetrisController
     {
-        // Riferimenti agli oggetti
-        private Partita partita;
-        private FormTetris tView;
-        private FormNome puntForm;
-        private FormClassifica classificaForm;
-        // Variabili di disegno
+        // Object references
+        private Game game;
+        private TetrisForm tView;
+        private NameForm nameForm;
+        private RankingForm rankingForm;
+        // Drawing variables
         private Graphics g;
         private SolidBrush brush = new SolidBrush(Color.DarkSlateGray);
         private Rectangle sidebar = new Rectangle(250, 0, 125, 400);
-        private Rectangle contenitorePezzo;
-        // Immagini 25x25px per visualizzare i pezzi già fissati
+        private Rectangle pieceContainer;
+        // Images 25x25px to view the already fixed pieces
         private Image immI_25 = Properties.Resources.immI_25;
         private Image immJ_25 = Properties.Resources.immJ_25;
         private Image immL_25 = Properties.Resources.immL_25;
@@ -27,158 +25,154 @@ namespace Tetris.Controller
         private Image immS_25 = Properties.Resources.immS_25;
         private Image immT_25 = Properties.Resources.immT_25;
         private Image immZ_25 = Properties.Resources.immZ_25;
-        // Musica di background
-        private SoundPlayer piano = new SoundPlayer(Properties.Resources.Piano);
-        // Variabili funzionali
-        private bool pezzoFissato = false;
-        private bool inPausa = false;
-        private int difficolta;
-        // Costanti
-        private const int dimensioneBlocco = 25;
+        // Functional variables
+        private bool fixedPiece = false;
+        private bool onPause = false;
+        private int difficulty;
+        // Constants
+        private const int blockSize = 25;
 
         public TetrisController()
         {
-            this.tView = new FormTetris();
+            this.tView = new TetrisForm();
             this.tView.KeyDown += new KeyEventHandler(Tetris_Form_KeyDown);
-            this.tView.Paint += new PaintEventHandler(Tetris_Form_Disegna);
+            this.tView.Paint += new PaintEventHandler(Tetris_Form_Draw);
             this.tView.t.Tick += new System.EventHandler(Tetris_Form_Tick);
-            this.tView.bMostraClassifica.Click += new System.EventHandler(Tetris_Form_MostraClassifica);
-            this.tView.bPausaRiprendi.Click += new System.EventHandler(Tetris_Form_PausaRiprendi);
-            this.tView.Resize += new System.EventHandler(Tetris_Form_PausaRiprendiMinimize);
-            this.tView.GotFocus += new System.EventHandler(Tetris_Form_PausaRiprendiGotLostFocus);
-            this.tView.LostFocus += new System.EventHandler(Tetris_Form_PausaRiprendiGotLostFocus);
+            this.tView.bShowRanking.Click += new System.EventHandler(Tetris_Form_ShowRanking);
+            this.tView.bPauseResume.Click += new System.EventHandler(Tetris_Form_PauseResume);
+            this.tView.Resize += new System.EventHandler(Tetris_Form_PauseResumeMinimize);
+            this.tView.GotFocus += new System.EventHandler(Tetris_Form_PauseResumeGotLostFocus);
+            this.tView.LostFocus += new System.EventHandler(Tetris_Form_PauseResumeGotLostFocus);
         }
 
-        public void IniziaPartita()
+        public void StartGame()
         {
-            // Inizializzazione oggetto Partita e avvio del form
-            this.partita = new Partita();
-            piano.PlayLooping();
+            // Initialization of Game object and start of form
+            this.game = new Game();
             this.tView.ShowDialog();
-            this.difficolta = this.partita.Difficolta;
+            this.difficulty = this.game.Difficulty;
         }
 
         private void Tetris_Form_KeyDown(object sender, KeyEventArgs e)
         {
-            if(!inPausa)
+            if(!onPause)
                 switch (e.KeyData)
                 {
-                    // Per ogni pulsante eseguo il movimento ed aggiorno
-                    // la posizione del pezzo dov'è situato
-                    // e quella successiva
+                    // For each button execute the movement and update 
+                    // the position of the piece where it is located and the next one
                     case Keys.Up:
-                        partita.RuotaPezzo();
-                        tView.Invalidate(new Rectangle(partita.PezzoAttuale.X * dimensioneBlocco,
-                                                       partita.PezzoAttuale.Y * dimensioneBlocco,
-                                                       partita.PezzoAttuale.Sprite.Width,
-                                                       partita.PezzoAttuale.Sprite.Height));
-                        tView.Invalidate(contenitorePezzo);
+                        game.RotatePiece();
+                        tView.Invalidate(new Rectangle(game.CurrentPiece.X * blockSize,
+                                                       game.CurrentPiece.Y * blockSize,
+                                                       game.CurrentPiece.Sprite.Width,
+                                                       game.CurrentPiece.Sprite.Height));
+                        tView.Invalidate(pieceContainer);
                         tView.Update();
                         break;
                     case Keys.Down:
-                        SpostaInBasso();
+                        MoveDown();
                         break;
                     case Keys.Left:
-                        partita.SpostaASinistra();
-                        tView.Invalidate(contenitorePezzo);
-                        contenitorePezzo.X -= dimensioneBlocco;
-                        tView.Invalidate(contenitorePezzo);
+                        game.MoveLeft();
+                        tView.Invalidate(pieceContainer);
+                        pieceContainer.X -= blockSize;
+                        tView.Invalidate(pieceContainer);
                         tView.Update();
                         break;
                     case Keys.Right:
-                        partita.SpostaADestra();
-                        tView.Invalidate(contenitorePezzo);
-                        contenitorePezzo.X += dimensioneBlocco;
-                        tView.Invalidate(contenitorePezzo);
+                        game.MoveRight();
+                        tView.Invalidate(pieceContainer);
+                        pieceContainer.X += blockSize;
+                        tView.Invalidate(pieceContainer);
                         tView.Update();
                         break;
                 }
         }
 
-        private void Tetris_Form_PausaRiprendiGotLostFocus(object sender, System.EventArgs e)
+        private void Tetris_Form_PauseResumeGotLostFocus(object sender, System.EventArgs e)
         {
             if (tView.Focused == true)
-                RiprendiGioco();
+                ResumeGame();
             else if (tView.Focused == false)
-                PausaGioco();
+                PauseGame();
         }
 
-        // Gestione dell'evento Tick: il pezzo viene spostato in basso
+        // Tick event: piece is moved down
         private void Tetris_Form_Tick(object sender, System.EventArgs e)
         {
-            SpostaInBasso();
+            MoveDown();
         }
 
-        private void Tetris_Form_PausaRiprendiMinimize(object sender, System.EventArgs e)
+        private void Tetris_Form_PauseResumeMinimize(object sender, System.EventArgs e)
         {
             if (tView.WindowState == FormWindowState.Minimized)
-                PausaGioco();
+                PauseGame();
             else if (tView.WindowState == FormWindowState.Normal)
-                RiprendiGioco();
+                ResumeGame();
         }
 
-        private void Tetris_Form_MostraClassifica(object sender, System.EventArgs e)
+        private void Tetris_Form_ShowRanking(object sender, System.EventArgs e)
         {
-            PausaGioco();
-            classificaForm = new FormClassifica(partita.punteggi);
-            classificaForm.bSvuota.Click += new System.EventHandler(FormClassifica_Svuota_Click);
-            classificaForm.ShowDialog();
-            RiprendiGioco();
+            PauseGame();
+            rankingForm = new RankingForm(game.scores);
+            rankingForm.bEmpty.Click += new System.EventHandler(RankingForm_Empty_Click);
+            rankingForm.ShowDialog();
+            ResumeGame();
         }
 
-        private void FormClassifica_Svuota_Click(object sender, System.EventArgs e)
+        private void RankingForm_Empty_Click(object sender, System.EventArgs e)
         {
-            classificaForm.grigliaDati.DataSource = null;
-            partita.punteggi.Clear();
-            partita.CreaFileClassifica();
-            classificaForm.grigliaDati.DataSource = partita.punteggi;
+            rankingForm.dataGrid.DataSource = null;
+            game.scores.Clear();
+            game.CreateRankingFile();
+            rankingForm.dataGrid.DataSource = game.scores;
         }
 
-        // Metodo per mettere in pausa il gioco
-        private void PausaGioco()
+        // Method to pause the game
+        private void PauseGame()
         {
-            inPausa = true;
+            onPause = true;
             tView.t.Enabled = false;
         }
 
-        // Metodo per riprendere il gioco dalla pausa
-        private void RiprendiGioco()
+        // Method to resume the game from pause
+        private void ResumeGame()
         {
-            inPausa = false;
+            onPause = false;
             tView.t.Enabled = true;
         }
 
-        // Metodo per fare lo switch tra pausa e ripresa del gioco
-        private void PausaRiprendiGioco()
+        // Method to switch from pause and resume of the game
+        private void PauseResumeGame()
         {
             if (tView.t.Enabled == true)
-                PausaGioco();
+                PauseGame();
             else
-                RiprendiGioco();
+                ResumeGame();
         }
 
-        // Metodo che gestisce l'evento click del form sulla label bPausaRiprendi
-        private void Tetris_Form_PausaRiprendi(object sender, System.EventArgs e)
+        // Method that handles the click event of the form on the label bPauseResume
+        private void Tetris_Form_PauseResume(object sender, System.EventArgs e)
         {
-            PausaRiprendiGioco();
+            PauseResumeGame();
         }
 
-        // Metodo che si occupa del disegno dei pezzi e della board nel Form
-        private void Tetris_Form_Disegna(object sender, PaintEventArgs e)
+        // Method that deals with drawing the pieces in the Form
+        private void Tetris_Form_Draw(object sender, PaintEventArgs e)
         {
             // Gestione dell'evento Paint
             e.Graphics.FillRectangle(brush, sidebar);
-            DisegnaBlocchi(g, e);
-            DisegnaPezzo(partita.PezzoAttuale, g, e);
-            DisegnaPezzoSuccessivo(partita.PezzoSuccessivo, g, e);
+            DrawBlocks(g, e);
+            DrawPiece(game.CurrentPiece, g, e);
+            DrawNextPiece(game.NextPiece, g, e);
         }
 
         // Metodo per disegnare i blocchi già fissati nella griglia
-        private void DisegnaBlocchi(Graphics g, PaintEventArgs e)
+        private void DrawBlocks(Graphics g, PaintEventArgs e)
         {
-            for(int i = 0; i < partita.GrigliaP.Griglia.GetLength(0); i++)
-                for(int j = 0; j < partita.GrigliaP.Griglia.GetLength(1); j++)
-                    switch(partita.GrigliaP.Griglia[i, j])
+            for(int i = 0; i < game.GridP.Grid.GetLength(0); i++)
+                for(int j = 0; j < game.GridP.Grid.GetLength(1); j++)
+                    switch(game.GridP.Grid[i, j])
                     {
                         case 1:
                             e.Graphics.DrawImage(immI_25,
@@ -218,94 +212,91 @@ namespace Tetris.Controller
             }
         }
 
-        // Metodo per disegnare il pezzo in gioco
-        private void DisegnaPezzo(Pezzo p, Graphics g, PaintEventArgs e)
+        // Method that handles drawing of the current piece
+        private void DrawPiece(Piece p, Graphics g, PaintEventArgs e)
         {
-            contenitorePezzo = new Rectangle(partita.PezzoAttuale.X * dimensioneBlocco,
-                                       partita.PezzoAttuale.Y * dimensioneBlocco,
-                                       partita.PezzoAttuale.Sprite.Width,
-                                       partita.PezzoAttuale.Sprite.Height);
+            pieceContainer = new Rectangle(game.CurrentPiece.X * blockSize,
+                                           game.CurrentPiece.Y * blockSize,
+                                           game.CurrentPiece.Sprite.Width,
+                                           game.CurrentPiece.Sprite.Height);
             e.Graphics.DrawImage(p.Sprite,
-                                 contenitorePezzo);
+                                 pieceContainer);
         }
 
-        // Metodo per disegnare il pezzo successivo nella sidebar
-        private void DisegnaPezzoSuccessivo(Pezzo p, Graphics g, PaintEventArgs e)
+        // Method that handles drawing of next piece in the sidebar
+        private void DrawNextPiece(Piece p, Graphics g, PaintEventArgs e)
         {
             e.Graphics.DrawImage(p.Sprite,
-                                 p.Nome=='I'? 295:280,
+                                 p.Name=='I'? 295:280,
                                  50);
         }
 
-        // Metodo che si occupa di decrementare l'intervallo del timer presente nel Form
-        private void DiminuisciIntervalloTimer()
+        // Method that deals with decrementing the timer interval in the Form
+        private void DecreaseTimerInterval()
         {
-            // L'intervallo del timer non può essere inferiore a 200
-            // Gli step di decremento sono di 50
+            // Timer interval can't be < 200
+            // The decrease steps are of 50
             if (tView.t.Interval >= 200)
                 tView.t.Interval -= 50;
         }
 
-        // Metodo per spostare in basso il pezzo in gioco
-        private void SpostaInBasso()
+        // Method to move down the current piece
+        private void MoveDown()
         {
-            // Verifico se la partita sia ancora valida
-            if (partita.InGioco)
+            // Check if the game is still valid
+            if (game.InPlay)
             {
-                // Verifico che il pezzo non stato fissato e in tal caso
-                // il pezzo viene spostato giù.
-                if (!pezzoFissato)
+                // Check if the piece has not been fixed and in this case the piece is moved down.
+                if (!fixedPiece)
                 {
-                    pezzoFissato = partita.SpostaInBasso();
-                    if (pezzoFissato)
+                    fixedPiece = game.MoveDown();
+                    if (fixedPiece)
                     {
                         tView.Invalidate();
-                        // Se il pezzo è stato fissato estraggo i nuovi pezzi e
-                        // reinizializzo la variabile pezzoFissato
-                        partita.EstraiPezzi();
-                        pezzoFissato = false;
+                        // If the piece has been fixed, extract the new pieces and 
+                        // reinitialize the fixedPiece variable
+                        game.ExtractPieces();
+                        fixedPiece = false;
 
-                        // Aggiorno la label dei punteggi con il nuovo punteggio
-                        // e verifico se la difficoltà sia aumentata rispetto all'attuale
-                        // se aumentata modifico l'intervallo del timer e aggiorno la 
-                        // label sul Livello attuale
-                        tView.Punti = "Punteggio: " + partita.Punteggio.ToString();
-                        if (difficolta < partita.Difficolta)
+                        // Update the score label with the new score and check
+                        // if the difficulty has increased compared to the current one
+                        // if increased modify the timer interval and update the label
+                        // to the current level
+                        tView.Score = "Score: " + game.Score.ToString();
+                        if (difficulty < game.Difficulty)
                         {
-                            DiminuisciIntervalloTimer();
-                            difficolta = partita.Difficolta;
-                            tView.Diff = "Livello: " + difficolta.ToString();
+                            DecreaseTimerInterval();
+                            difficulty = game.Difficulty;
+                            tView.Diff = "Level: " + difficulty.ToString();
                         }
                     }
                 }
             }
             else
             {
-                // Caso in cui il gioco sia terminato:
-                // disabilito l'oggetto Timer e mostro una MessageBox con il punteggio
-                // Premendo "ok" la partita ricomincia da capo, reinizializzo le variabili
-                // e reinizializzo le label e il timer del Form
+                // Case in which the game is terminated:
+                // disable the timer object and show a MessageBox with the score
+                // Pressing "ok" the game starts all over again and variables will be reinitializated
                 this.tView.t.Enabled = false;
-                MessageBox.Show("Hai Perso! Punteggio finale: " + partita.Punteggio);
-                InserisciRecord();
-                partita.InizializzaPartita();
-                this.tView.Inizializza();
+                MessageBox.Show("You Lost! Final score: " + game.Score);
+                InsertScore();
+                game.InitializeGame();
+                this.tView.Initialize();
                 this.tView.Invalidate();
 
             }
-            tView.Invalidate(contenitorePezzo);
-            contenitorePezzo.Y += dimensioneBlocco;
-            tView.Invalidate(contenitorePezzo);
+            tView.Invalidate(pieceContainer);
+            pieceContainer.Y += blockSize;
+            tView.Invalidate(pieceContainer);
             tView.Update();
         }
 
-        // Metodo per mostrare il form di inserimento del nome per poter salvare il punteggio
-        // e per l'aggiunta dello stesso al file classifica.xml
-        private void InserisciRecord()
+        // Method to show NameForm
+        private void InsertScore()
         {
-            puntForm = new FormNome();
-            this.puntForm.ShowDialog();
-            partita.SalvaPunteggio(puntForm.Nome, partita.Punteggio);
+            nameForm = new NameForm();
+            this.nameForm.ShowDialog();
+            game.SaveScore(nameForm.Name, game.Score);
         }
     }
 }
